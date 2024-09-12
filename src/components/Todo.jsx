@@ -1,31 +1,30 @@
 import { useState } from "react"
 import "../css/style.css"
-export default function Todo({item,index,todos,setTodos,setTodo}){
+export default function Todo({item,index,setTodos,sorted}){
   const [isEditing, setIsEditing] = useState(false);
 const [editedText, setEditedText] = useState(item.todoName);
 
-
-
-
+  
     function deleteIt(){
-      let  todosret=todos.filter(function(rettodo,retIndex){
+      let  todosret=sorted.filter(function(rettodo,retIndex){
             return retIndex !== index
             
         })
         setTodos(todosret)
+        localStorage.setItem("todos", JSON.stringify(todosret))
     }
 
   
 
    function checker(){//function to check the task if it is done or not
-    let newTodos=todos.map(function(todoObj,todoIndx){
+    let newTodos=sorted.map(function(todoObj,todoIndx){
       if(todoIndx===index){
         return { ...todoObj, status: !todoObj.status }
       }
       return todoObj
     })
     setTodos(newTodos)
-   
+    localStorage.setItem("todos", JSON.stringify(newTodos))
    }
    
 
@@ -33,13 +32,14 @@ const [editedText, setEditedText] = useState(item.todoName);
     
     if (isEditing) {
       // Save the edited todo
-      const editedTodo = todos.map((todoObj, todoIndx) => {
+      const editedTodo = sorted.map((todoObj, todoIndx) => {
         if (todoIndx === index) {
           return { ...todoObj, todoName: editedText };
         }
         return todoObj;
       });
       setTodos(editedTodo);
+      localStorage.setItem("todos", JSON.stringify(editedTodo))
       setIsEditing(false);
     } else {
       // Enter edit mode

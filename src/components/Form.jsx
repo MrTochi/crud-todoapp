@@ -1,13 +1,21 @@
 
 import "../css/style.css"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Todobox from "./Todobox"
 import Foot from "./Foot"
 export default function Form(){
 
     let [todo,setTodo]=useState({todoName:``,status:false})
     let [todos,setTodos]=useState([])
-    let [alertMessage, setAlertMessage] = useState("")//alert message for the user if the task already exists 
+    let [alertMessage, setAlertMessage] = useState("")//alert message for the user if the task already exists   
+   
+
+    useEffect(() => {
+        const storedTodos = JSON.parse(localStorage.getItem("todos")) || []
+        setTodos(storedTodos)
+    }, [])
+
+    
     
     const similarTodo=todos.some(function(todoObj){//check if the task already exists
         return todoObj.todoName===todo.todoName
@@ -25,13 +33,15 @@ export default function Form(){
         }
         else{
             setAlertMessage("")
-            setTodos([...todos,todo])
+            setTodos([...todos, todo])
+            localStorage.setItem("todos", JSON.stringify([...todos, todo]))
             setTodo({todoName:``,status:false})
+           
         }
         
     }
 
-    // const sorted=todos.slice().sort((a,b)=>Number(a.status)-Number(b.status))
+    //
 
     
     return(
